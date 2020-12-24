@@ -1,7 +1,7 @@
 ## Laravel Auth-Token
 Driver for Laravel Auth by using tokens 
 
-####Required:
+#### Required:
     "php": "^7.3|^8",
     "laravel/framework": "^7|^8"
 
