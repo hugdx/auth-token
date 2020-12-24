@@ -1,0 +1,30 @@
+{
+    "name": "hungdx/auth-token",
+    "version": "1.0.0",
+    "description": "The Authentication driver using token for Laravel Framework.",
+    "keywords": ["Authentication", "Authentication Token", "Laravel Auth", "Auth Token", "laravel"],
+    "license": "MIT",
+    "homepage": "https://github.com/hugdx/auth-token",
+    "support": {
+        "issues": "https://github.com/hugdx/auth-token/issues",
+        "source": "https://github.com/hugdx/auth-token"
+    },
+    "authors": [
+        {
+            "name": "Xuan Hung",
+            "email": "mr.hungdx@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8",
+        "ext-json": "*",
+        "laravel/framework": "^6|^7|^8"
+    },
+    "autoload": {
+        "psr-4": {
+            "HungDX\\AuthToken\\": "src/",
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
