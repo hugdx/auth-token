@@ -35,7 +35,7 @@ class AuthTokenProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
 
         // Add middleware
-        if (config('auth-token.autoload_middelware')) {
+        if (config('auth-token.autoload_middleware')) {
             /** @var \Illuminate\Routing\Router $router */
             $router = $this->app['router'];
 

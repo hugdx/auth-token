@@ -15,7 +15,7 @@ class CreateUserTokensTable extends Migration
     {
         Schema::create('user_tokens', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->string('auth_identifier', 255);
             $table->string('token');
             $table->boolean('remember')->default(0);
             $table->timestamps();

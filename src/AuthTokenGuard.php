@@ -4,7 +4,6 @@
 namespace HungDX\AuthToken;
 
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -12,8 +11,8 @@ use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthTokenGuard implements StatefulGuard
 {
@@ -52,29 +51,50 @@ class AuthTokenGuard implements StatefulGuard
         ];
     }
 
-    /** Get the currently authenticated user */
-    public function user(): ?Authenticatable
+    /**
+     * Get the currently authenticated user.
+     *
+     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     */
+    public function user()
     {
+        $this->getUserToken();
         return $this->user ?: null;
     }
 
-    /** Set the current user. */
-    public function setUser(AuthenticatableContract $user)
+    /**
+     * Set the current user.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @return void
+     */
+    public function setUser(Authenticatable $user)
     {
         $this->user      = $user;
         $this->loggedOut = false;
-        return $this;
     }
 
-    /** Log a user into the application. */
-    public function login(AuthenticatableContract $user, bool $remember = false)
+    /**
+     * Log a user into the application.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  bool  $remember
+     * @return void
+     */
+    public function login(Authenticatable $user, $remember = false)
     {
         $this->setUser($user);
         $this->userToken = $this->createUserToken($user, $remember);
     }
 
-    /** Attempt to authenticate a user using the given credentials. */
-    public function attempt(array $credentials = [], bool $remember = false): bool
+    /**
+     * Attempt to authenticate a user using the given credentials.
+     *
+     * @param  array  $credentials
+     * @param  bool  $remember
+     * @return bool
+     */
+    public function attempt(array $credentials = [], $remember = false)
     {
         $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
         if ($this->hasValidCredentials($user, $credentials)) {
@@ -84,8 +104,13 @@ class AuthTokenGuard implements StatefulGuard
         return false;
     }
 
-    /** Log a user into the application without sessions or cookies. */
-    public function once(array $credentials = []): bool
+    /**
+     * Log a user into the application without sessions or cookies.
+     *
+     * @param  array  $credentials
+     * @return bool
+     */
+    public function once(array $credentials = [])
     {
         if ($this->validate($credentials)) {
             $this->setUser($this->lastAttempted);
@@ -95,8 +120,13 @@ class AuthTokenGuard implements StatefulGuard
         return false;
     }
 
-    /** Log the given user ID into the application without sessions or cookies. */
-    public function onceUsingId($id): ?Authenticatable
+    /**
+     * Log the given user ID into the application without sessions or cookies.
+     *
+     * @param  mixed  $id
+     * @return \Illuminate\Contracts\Auth\Authenticatable|bool
+     */
+    public function onceUsingId($id)
     {
         if (($user = $this->provider->retrieveById($id))) {
             $this->setUser($user);
@@ -105,8 +135,14 @@ class AuthTokenGuard implements StatefulGuard
         return null;
     }
 
-    /** Log the given user ID into the application. */
-    public function loginUsingId($id, $remember = false): ?Authenticatable
+    /**
+     * Log the given user ID into the application.
+     *
+     * @param  mixed  $id
+     * @param  bool  $remember
+     * @return \Illuminate\Contracts\Auth\Authenticatable|bool
+     */
+    public function loginUsingId($id, $remember = false)
     {
         if (($user = $this->provider->retrieveById($id))) {
             $this->login($user, $remember);
@@ -115,22 +151,36 @@ class AuthTokenGuard implements StatefulGuard
         return null;
     }
 
-    /** Determine if the user was authenticated via "remember me" cookie. */
-    public function viaRemember(): bool
+    /**
+     * Determine if the user was authenticated via "remember me" cookie.
+     *
+     * @return bool
+     */
+    public function viaRemember()
     {
         // Nothing need to do for this function. Just call $this->user() is enough
         return false;
     }
 
-    /** Validate a user's credentials. */
-    public function validate(array $credentials = []): bool
+    /**
+     * Validate a user's credentials.
+     *
+     * @param  array  $credentials
+     * @return bool
+     */
+    public function validate(array $credentials = [])
     {
         $user = $this->provider->retrieveByCredentials($credentials);
         return $this->hasValidCredentials($user, $credentials);
     }
 
-    /** Log the user out of the application. */
-    public function logout(): void
+    /**
+     * Log the user out of the application.
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function logout()
     {
         $user = $this->user();
         $this->clearUserDataFromStorage();
@@ -139,7 +189,11 @@ class AuthTokenGuard implements StatefulGuard
         $this->loggedOut = true;
     }
 
-    /** Remove the user data from the session / cookies / database. */
+    /**
+     * Remove the user data from the session / cookies / database
+     *
+     * @throws Exception
+     */
     protected function clearUserDataFromStorage()
     {
         // Delete token from database
@@ -148,8 +202,14 @@ class AuthTokenGuard implements StatefulGuard
         }
     }
 
-    /** Create an UserToken */
-    protected function createUserToken(AuthenticatableContract $user, bool $remember = false): UserToken
+    /**
+     * Create an UserToken
+     *
+     * @param Authenticatable $user
+     * @param bool $remember
+     * @return UserToken
+     */
+    protected function createUserToken(Authenticatable $user, bool $remember = false): UserToken
     {
         $userToken = new UserToken();
         $userToken->auth_identifier = $user->getAuthIdentifier();
@@ -159,7 +219,12 @@ class AuthTokenGuard implements StatefulGuard
         return $userToken;
     }
 
-    /** Get UserToken from client */
+    /**
+     * Get UserToken from client
+     *
+     * @return UserToken|null
+     * @throws Exception
+     */
     private function getUserTokenFromRequest(): ?UserToken
     {
         // 1. Get token from Request
@@ -172,7 +237,7 @@ class AuthTokenGuard implements StatefulGuard
         }
 
         // 2. Retire UserToken from database
-        $userToken = UserToken::retrieveByToken($token);
+        $userToken = UserToken::retrieveByToken($token ?: '');
         if (!$userToken) {
             return null;
         }
@@ -192,7 +257,12 @@ class AuthTokenGuard implements StatefulGuard
         return $userToken;
     }
 
-    /** Get user from user token */
+    /**
+     * Get user from user token
+     *
+     * @return UserToken|null
+     * @throws Exception
+     */
     public function getUserToken(): ?UserToken
     {
         if ($this->userToken === false) {
@@ -201,34 +271,67 @@ class AuthTokenGuard implements StatefulGuard
 
         if (is_null($this->userToken)) {
             $this->userToken = $this->getUserTokenFromRequest() ?: false;
+            if ($this->userToken) {
+                $this->user = $this->provider->retrieveById($this->userToken->auth_identifier);
+            }
         }
 
         return $this->userToken ?: null;
     }
 
-    /** Determine if the user matches the credentials. */
+    /**
+     * Determine if the user matches the credentials.
+     *
+     * @param $user
+     * @param $credentials
+     * @return bool
+     */
     protected function hasValidCredentials($user, $credentials): bool
     {
         return !is_null($user) && $this->provider->validateCredentials($user, $credentials);
     }
 
-    /** Set the current request instance. */
+    /**
+     * Set the current request instance.
+     *
+     * @param Request $request
+     * @return AuthTokenGuard
+     */
     public function setRequest(Request $request): self
     {
         $this->request = $request;
         return $this;
     }
 
-    /** Get the current request instance. */
+    /**
+     * Get the current request instance
+     *
+     * @return Request|\Symfony\Component\HttpFoundation\Request
+     */
     public function getRequest()
     {
         return $this->request ?: \Symfony\Component\HttpFoundation\Request::createFromGlobals();
     }
 
-    /** Send token to client via: Header [OR / AND] Cookie */
+    /**
+     * Send token to client via: Header [OR / AND] Cookie
+     *
+     * @param $response
+     * @return mixed
+     * @throws Exception
+     */
     public function sendToken($response)
     {
-        $token           = $this->getUserToken()->getToken() ?? '';
+        // Header already sent. Noway add more header
+        if (headers_sent()) {
+            return $response;
+        }
+
+        $token = '';
+        if ($this->getUserToken()) {
+            $token = $this->userToken->getToken() ?: '';
+        }
+
         $headerFieldName = $this->config['token_field']['header'];
         $cookieFieldName = $this->config['token_field']['cookie'];
 
@@ -246,7 +349,10 @@ class AuthTokenGuard implements StatefulGuard
             }
         }
 
-        $response = $response instanceof RedirectResponse ? $response : response($response);
+        // Make sure $response is instance of Response
+        if (!$response instanceof Response) {
+            $response = response($response);
+        }
 
         // Send token via header
         if ($headerFieldName) {
@@ -257,6 +363,11 @@ class AuthTokenGuard implements StatefulGuard
         if ($cookieFieldName) {
             $cookie = cookie($cookieFieldName, $token, $this->config['lifetime']['expired'] / 60);
             $response->cookie($cookie);
+        }
+
+        // Save UserToken to database: Only save token when header added to response object
+        if ($this->userToken && $this->userToken->isTokenChanged()) {
+            $this->userToken->save();
         }
 
         return $response;

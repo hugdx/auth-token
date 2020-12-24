@@ -12,5 +12,5 @@ return [
         'cookie' => 'X-Auth-Token',
     ],
 
-    'autoload_middelware' => true,
+    'autoload_middleware' => true,
 ];

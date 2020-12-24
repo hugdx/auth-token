@@ -3,7 +3,6 @@
 namespace HungDX\AuthToken;
 
 use Closure;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class AuthTokenMiddleware
@@ -28,11 +27,7 @@ class AuthTokenMiddleware
 
         $response = $next($request);
 
-        $userToken = $guard->getUserToken();
-        if ($userToken->isTokenChanged()) {
-            $response = $guard->sendToken($response);
-            $userToken->save();
-        }
+        $response = $guard->sendToken($response);
 
         return $response;
     }

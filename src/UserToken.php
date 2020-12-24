@@ -4,8 +4,6 @@
 namespace HungDX\AuthToken;
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
@@ -69,7 +67,7 @@ class UserToken extends Model
 
         return Crypt::encrypt([
             'auth_identifier' => $this->auth_identifier,
-            'token'           => $this->token,
+            'token' => $this->token,
         ]);
     }
 
@@ -101,14 +99,17 @@ class UserToken extends Model
                 ->where('token', $payload['token'])
                 ->first();
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Log::alert(__METHOD__ . '#' . __LINE__ . " Unable decrypt payload");
             return null;
         }
     }
 
-    /** Remove tokens unused */
-    public static function clearup(?int $expiredAfterSeconds)
+    /** Remove tokens unused
+     *
+     * @param int|null $expiredAfterSeconds
+     */
+    public static function deleteTokensExpired(?int $expiredAfterSeconds)
     {
         $REMEMBER_FLAG_ON = 1;
         static::query()
@@ -117,8 +118,12 @@ class UserToken extends Model
             ->delete();
     }
 
-    /** Remove tokens by auth identifier (user_id/email...) */
-    public static function clearupById($authIdentifier)
+    /**
+     * Remove tokens by auth identifier (user_id/email...)
+     *
+     * @param $authIdentifier
+     */
+    public static function deleteTokensById($authIdentifier)
     {
         static::query()
             ->where('auth_identifier', '=', $authIdentifier)
