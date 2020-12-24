@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "HungDX\\AuthToken\\": "src/",
+            "HungDX\\AuthToken\\": "src/"
         }
     },
     "minimum-stability": "dev",
