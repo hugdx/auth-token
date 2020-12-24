@@ -3,7 +3,6 @@
     "version": "1.0.0",
     "description": "The Authentication driver using token for Laravel Framework.",
     "keywords": ["Authentication", "Authentication Token", "Laravel Auth", "Auth Token", "laravel"],
-    "license": "MIT",
     "homepage": "https://github.com/hugdx/auth-token",
     "support": {
         "issues": "https://github.com/hugdx/auth-token/issues",
