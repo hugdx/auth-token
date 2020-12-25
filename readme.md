@@ -31,19 +31,19 @@ We need a way to authenticate for *web* and *api*. Laravel supports drivers **se
 composer require hungdx/auth-token
 ```
 
-### Laravel:
-#### Add the AuthTokenProvider to the providers array in `config/app.php`
+### Laravel
+Add the AuthTokenProvider to the providers array in `config/app.php`
 
 ```php
 HungDX\AuthToken\AuthTokenProvider::class,
 ```
 
-#### Create `user_tokens` table
+Create `user_tokens` table
 ```shell
 php artisan migrate --path="vendor/hungdx/auth-token/migrations"
 ```
 
-### Lumen:
+### Lumen
 
 For Lumen, register a different Provider in `bootstrap/app.php`:
 
@@ -84,13 +84,13 @@ In the `bootstrap/auth.php`, at `guards` section,  change driver to `auth-token`
   
 ## Configuration
 
-#### If you want to customize the config, You can public the config by run command:
+If you want to customize the config, run command:
 
 ```shell
 php artisan vendor:publish --provider="HungDX\AuthToken\AuthTokenProvider"
 ```
 
-#### File `config/auth-token.php`
+File `config/auth-token.php`
 ```php
 return [
     'lifetime' => [
