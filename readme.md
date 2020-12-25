@@ -18,7 +18,7 @@ We need a way to authentication for *web* and *api*. Laravel supported drivers *
  - All tokens stored in the database. To logout a device, just delete token record of this device. 
 
 #### Required:
-    "php": "^7.3|^8",
+    "php": "^7.2|^8",
     "laravel/framework": "^7|^8"
 
 ## Installation
