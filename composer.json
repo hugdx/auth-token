@@ -1,6 +1,7 @@
 {
     "name": "hungdx/auth-token",
-    "version": "1.0.0",
+    "version": "1.0.1",
+    "license": "MIT",
     "description": "The Authentication driver using token for Laravel Framework.",
     "keywords": ["Authentication", "Authentication Token", "Laravel Auth", "Auth Token", "laravel"],
     "homepage": "https://github.com/hugdx/auth-token",
@@ -19,10 +20,17 @@
         "ext-json": "*",
         "laravel/framework": "^6|^7|^8"
     },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.17"
+    },
     "autoload": {
         "psr-4": {
             "HungDX\\AuthToken\\": "src/"
         }
+    },
+    "scripts": {
+        "phpcs": "php-cs-fixer fix --dry-run",
+        "phpcs-fix": "php-cs-fixer fix"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

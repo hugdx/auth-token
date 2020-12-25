@@ -3,7 +3,6 @@
 
 namespace HungDX\AuthToken;
 
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,7 +21,8 @@ class AuthTokenProvider extends ServiceProvider
         });
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/auth-token.php', 'auth-token'
+            __DIR__ . '/../config/auth-token.php',
+            'auth-token'
         );
     }
 

@@ -1,0 +1,31 @@
+<?php
+namespace PhpCsFixer;
+return Config::create()
+    ->setRiskyAllowed(true)
+    ->setRules([
+        '@PSR2' => true,
+        'psr4' => true,
+        'blank_line_after_opening_tag'=>true,
+        'unary_operator_spaces'=>true,
+        'no_blank_lines_after_class_opening'=>true,
+        'array_syntax' => [
+            'syntax' => 'short',
+        ],
+        'no_empty_statement' => true,
+        'cast_spaces' => true,
+        'no_trailing_comma_in_singleline_array' => true,
+        'trailing_comma_in_multiline_array' => true,
+        'binary_operator_spaces' => [
+        'align_double_arrow' => true,
+        'align_equals' => true,
+        ],
+    ])
+    ->setFinder(
+        Finder::create()
+            ->exclude('resources')
+            ->exclude('bootstrap')
+            ->exclude('storage')
+            ->exclude('vender')
+            ->in(__DIR__)
+    )
+;
