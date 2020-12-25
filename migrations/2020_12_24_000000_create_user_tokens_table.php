@@ -20,7 +20,7 @@ class CreateUserTokensTable extends Migration
             $table->boolean('remember')->default(0);
             $table->timestamps();
 
-            $table->index(['user_id', 'token']);
+            $table->index(['auth_identifier', 'token']);
         });
     }
 
