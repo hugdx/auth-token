@@ -3,15 +3,12 @@
 
 namespace HungDX\AuthToken;
 
-
 use Exception;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthTokenGuard implements StatefulGuard
@@ -184,7 +181,7 @@ class AuthTokenGuard implements StatefulGuard
     {
         $user = $this->user();
         $this->clearUserDataFromStorage();
-        $this->user = null;
+        $this->user      = null;
         $this->userToken = null;
         $this->loggedOut = true;
     }
@@ -211,9 +208,9 @@ class AuthTokenGuard implements StatefulGuard
      */
     protected function createUserToken(Authenticatable $user, bool $remember = false): UserToken
     {
-        $userToken = new UserToken();
+        $userToken                  = new UserToken();
         $userToken->auth_identifier = $user->getAuthIdentifier();
-        $userToken->remember = $remember;
+        $userToken->remember        = $remember;
         $userToken->generateToken();
         $userToken->setLifeTime($this->config['lifetime']);
         return $userToken;
@@ -361,7 +358,22 @@ class AuthTokenGuard implements StatefulGuard
 
         // Send token via cookie
         if ($cookieFieldName) {
-            $cookie = cookie($cookieFieldName, $token, $this->config['lifetime']['expired'] / 60);
+            switch (true) {
+                // Delete cookie
+                case empty($token):
+                    $cookie = cookie()->forget($cookieFieldName, $token);
+                    break;
+
+                // Remember cookie forever when remember flag is on
+                case $this->userToken->remember:
+                    $cookie = cookie()->forever($cookieFieldName, $token);
+                    break;
+
+                // Normal cookie: just set to equal session
+                default:
+                    $cookie = cookie()->make($cookieFieldName, $token);
+                    break;
+            }
             $response->cookie($cookie);
         }
 

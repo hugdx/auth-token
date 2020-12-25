@@ -67,7 +67,7 @@ class UserToken extends Model
 
         return Crypt::encrypt([
             'auth_identifier' => $this->auth_identifier,
-            'token' => $this->token,
+            'token'           => $this->token,
         ]);
     }
 
@@ -98,7 +98,6 @@ class UserToken extends Model
                 ->where('auth_identifier', $payload['auth_identifier'])
                 ->where('token', $payload['token'])
                 ->first();
-
         } catch (\Exception $e) {
             Log::alert(__METHOD__ . '#' . __LINE__ . " Unable decrypt payload");
             return null;

@@ -1,5 +1,21 @@
 ## Laravel Auth-Token
-Driver for Laravel Auth by using tokens 
+Driver for Laravel Auth by using tokens
+
+### The story
+We need a way to authentication for *web* and *api*. Laravel supported drivers **session** *(SessionGuard)*, **token** *(TokenGuard)*, **request** *(RequestGuard)* but it is not strong enough.
+ - **SessionGuard**: Unable use for api. On the Web, with same user and remember is on -> only one device can be use this feature.
+ - **TokenGuard**: It is not designed for Web and not supported multiple device login at sametime 
+ - **RequestGuard**: Not checked yet
+
+   > For *api*, we have got **JWT**, why not use that?
+   >> **JWT** very easy to create token, verify token, but it is not strong enough for manage the tokens. When you want to remove a token which created before, no way to do that until token expired.      
+
+
+### What do the features of this driver?
+ - Supported for *web*, *api* or any other purposes.
+ - Support multiple devices login for a user at sametime.
+ - With a good config, we can count number users/devices of user are logged-in (Set refresh lifetime to small enough and count records in table *user_tokens*)
+ - All tokens stored in the database. To logout a device, just delete token record of this device. 
 
 #### Required:
     "php": "^7.3|^8",
@@ -79,3 +95,11 @@ return [
     'autoload_middleware' => true,  // Auto add to middleware HungDX\AuthToken\AuthTokenMiddleware to every request
 ];
 ```
+## Changes
+#### 1.0.1 (2020-12-25)
+ * Support remember flag. When remember is on, The token never expired until logged out
+ * Fix phpcs
+
+#### 1.0.0 (2020-12-24)
+ * Add auth-token driver for Auth of laravel/lumen
+ * Auto add middleware to all router groups
