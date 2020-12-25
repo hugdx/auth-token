@@ -7,8 +7,8 @@ We need a way to authentication for *web* and *api*. Laravel supported drivers *
  - **TokenGuard**: It is not designed for Web and not supported multiple device login at sametime 
  - **RequestGuard**: Not checked yet
 
-   > For *api*, we have got **JWT**, why not use that?
-   >> **JWT** very easy to create token, verify token, but it is not strong enough for manage the tokens. When you want to remove a token which created before, no way to do that until token expired.      
+> For *api*, we have got **JWT**, why not use that?
+>> **JWT** very easy to create token, verify token, but it is not strong enough for manage the tokens. When you want to remove a token which created before, no way to do that until token expired.      
 
 
 ### What do the features of this driver?
@@ -18,7 +18,7 @@ We need a way to authentication for *web* and *api*. Laravel supported drivers *
  - All tokens stored in the database. To logout a device, just delete token record of this device. 
 
 #### Required:
-    "php": "^7.3|^8",
+    "php": "^7.2|^8",
     "laravel/framework": "^7|^8"
 
 ## Installation
@@ -98,7 +98,9 @@ return [
 ## Changes
 #### 1.0.1 (2020-12-25)
  * Support remember flag. When remember is on, The token never expired until logged out
+ * Support PHP 7.2
  * Fix phpcs
+ * Fix migration
 
 #### 1.0.0 (2020-12-24)
  * Add auth-token driver for Auth of laravel/lumen
