@@ -19,7 +19,7 @@ We need a way to authenticate for *web* and *api*. Laravel supports drivers **se
 
 #### Required:
     "php": "^7.1.3|^8",
-    "laravel/framework": "^7|^8"
+    "laravel/framework": "^5.8|^6|^7|^8"
 
   
   
