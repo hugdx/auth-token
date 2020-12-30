@@ -18,8 +18,8 @@ We need a way to authenticate for *web* and *api*. Laravel supports drivers **se
  - All tokens stored in the database. To logout a device, just delete the token record of this device. 
 
 #### Required:
-    "php": "^7.2|^8",
-    "laravel/framework": "^7|^8"
+    "php": "^7.1.3|^8",
+    "laravel/framework": "^5.8|^6|^7|^8"
 
   
   
@@ -109,6 +109,9 @@ return [
   
   
 ## Changes
+#### 1.0.2 (2020-12-30)
+ * Support PHP 7.1.3, Laravel 5.8
+
 #### 1.0.1 (2020-12-25)
  * Support remember flag. When remember is on, The token never expire until logged out
  * Support PHP 7.2
