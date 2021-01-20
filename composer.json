@@ -1,6 +1,6 @@
 {
     "name": "hungdx/auth-token",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": "MIT",
     "description": "The Authentication driver using token for Laravel Framework.",
     "keywords": ["Authentication", "Authentication Token", "Laravel Auth", "Auth Token", "laravel"],

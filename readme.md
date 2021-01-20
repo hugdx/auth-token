@@ -109,6 +109,9 @@ return [
   
   
 ## Changes
+#### 1.0.3 (2021-01-20)
+* Fix migration in Laravel 5.8
+
 #### 1.0.2 (2020-12-30)
  * Support PHP 7.1.3, Laravel 5.8
 
