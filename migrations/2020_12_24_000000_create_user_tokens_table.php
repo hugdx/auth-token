@@ -17,6 +17,7 @@ class CreateUserTokensTable extends Migration
             $table->increments('id');
             $table->string('auth_identifier', 255);
             $table->string('token');
+            $table->string('session_id');
             $table->boolean('remember')->default(0);
             $table->timestamps();
 

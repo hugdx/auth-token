@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
  * @property string $auth_identifier
  * @property string $token
  * @property boolean $remember
+ * @property string $session_id
  * @property string|Carbon $created_at
  * @property string|Carbon $updated_at
  */

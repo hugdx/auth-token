@@ -11,11 +11,8 @@ class AuthTokenProvider extends ServiceProvider
     public function register()
     {
         Auth::extend('auth-token', function ($app, $name, array $config) {
-            $guard = new AuthTokenGuard(
-                Auth::createUserProvider($config['provider'] ?? null),
-                $app['request'],
-                $config
-            );
+            $guard = new AuthTokenGuard($name, $config, Auth::createUserProvider($config['provider'] ?? null));
+            $guard->setDispatcher($this->app['events']);
             $app->refresh('request', $guard, 'setRequest');
             return $guard;
         });
