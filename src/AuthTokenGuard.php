@@ -361,11 +361,11 @@ class AuthTokenGuard implements StatefulGuard
     /**
      * Get the current request instance
      *
-     * @return Request|\Symfony\Component\HttpFoundation\Request
+     * @return Request
      */
-    public function getRequest()
+    public function getRequest(): Request
     {
-        return $this->request ?: \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+        return $this->request ?: Request::createFromGlobals();
     }
 
     /**
